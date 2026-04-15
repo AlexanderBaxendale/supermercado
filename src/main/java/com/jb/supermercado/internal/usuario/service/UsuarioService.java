@@ -1,5 +1,6 @@
 package com.jb.supermercado.internal.usuario.service;
 
+import com.jb.supermercado.config.exception.BusinessException;
 import com.jb.supermercado.config.exception.RecursoNaoEncontradoException;
 import com.jb.supermercado.internal.usuario.dto.UsuarioRequestRecord;
 import com.jb.supermercado.internal.usuario.dto.UsuarioResponseRecord;
@@ -25,6 +26,10 @@ public class UsuarioService {
     }
 
     public void cadastrarUsuario(UsuarioRequestRecord usuarioRequest) {
+        boolean emailJaExiste = this.usuarioRepository.existsByEmail(usuarioRequest.email());
+        if (emailJaExiste) {
+            throw new BusinessException("Já existe um usuário cadastrado com este e-mail");
+        }
         UsuarioEntity usuarioEntity = UsuarioMapperRecord.requestParaEntidade(usuarioRequest);
         this.usuarioRepository.save(usuarioEntity);
     }

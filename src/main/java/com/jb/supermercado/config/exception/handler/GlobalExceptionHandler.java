@@ -1,5 +1,6 @@
 package com.jb.supermercado.config.exception.handler;
 
+import com.jb.supermercado.config.exception.BusinessException;
 import com.jb.supermercado.config.exception.RecursoNaoEncontradoException;
 import com.jb.supermercado.config.exception.response.ErroPadraoResponse;
 import com.jb.supermercado.config.exception.response.ErroValidacaoResponse;
@@ -42,5 +43,15 @@ public class GlobalExceptionHandler {
                 ex.getMessage()
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ErroPadraoResponse> handleBusinessException(BusinessException ex) {
+        ErroPadraoResponse response = new ErroPadraoResponse(
+                HttpStatus.CONFLICT.value(),
+                "Regra de negócio violada",
+                ex.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 }
